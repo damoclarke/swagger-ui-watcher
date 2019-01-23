@@ -70,7 +70,9 @@ function start(swaggerFile, targetDir, port, hostname, openBrowser) {
   io.on('connection', function(socket) {
     socket.on('uiReady', function(data) {
       bundle(swaggerFile).then(function (bundled) {
-        socket.emit('updateSpec', JSON.stringify(bundled));
+        //var bundleString = JSON.stringify(bundled, null, 2);
+        var bundleString = yaml.safeDump(bundled);
+        socket.emit('updateSpec', bundleString);
       }, function (err) {
         socket.emit('showError', err);
       });
@@ -80,7 +82,8 @@ function start(swaggerFile, targetDir, port, hostname, openBrowser) {
   watch(targetDir, {recursive: true}, function(eventType, name) {
     bundle(swaggerFile).then(function (bundled) {
       console.log("File changed. Sent updated spec to the browser.");
-      var bundleString = JSON.stringify(bundled, null, 2);
+      //var bundleString = JSON.stringify(bundled, null, 2);
+      var bundleString = yaml.safeDump(bundled);
       io.sockets.emit('updateSpec', bundleString);
     }, function (err) {
       io.sockets.emit('showError', err);
@@ -96,7 +99,8 @@ function start(swaggerFile, targetDir, port, hostname, openBrowser) {
 
 function build (swaggerFile, targetDir, bundleTo) {
   bundle(swaggerFile).then(function (bundled) {
-      var bundleString = JSON.stringify(bundled, null, 2);
+      //var bundleString = JSON.stringify(bundled, null, 2);
+      var bundleString = yaml.safeDump(bundled);
       if (typeof bundleTo === 'string') {
         fs.writeFile(bundleTo, bundleString, function(err) {
           if (err) {
