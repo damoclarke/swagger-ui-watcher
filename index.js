@@ -97,10 +97,14 @@ function start(swaggerFile, targetDir, port, hostname, openBrowser) {
   });
 }
 
-function build (swaggerFile, targetDir, bundleTo) {
+function build (swaggerFile, targetDir, bundleTo, bundleYaml) {
   bundle(swaggerFile).then(function (bundled) {
-      //var bundleString = JSON.stringify(bundled, null, 2);
-      var bundleString = yaml.safeDump(bundled);
+      if(bundleYaml) {
+        var bundleString = yaml.safeDump(bundled);
+      } else {
+        var bundleString = JSON.stringify(bundled, null, 2);
+      }
+      
       if (typeof bundleTo === 'string') {
         fs.writeFile(bundleTo, bundleString, function(err) {
           if (err) {

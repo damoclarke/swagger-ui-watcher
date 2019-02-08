@@ -19,6 +19,7 @@ program
     .option('-p, --port <port>', 'Port to be used. Default is 8000')
     .option('-h, --host <Hostname|Ip>', 'Host to be used. Default is 127.0.0.1')
     .option('-b, --bundle <bundleTo>', 'Create bundle and save it to bundleTo')
+    .option('-y, --bundleYaml', 'Create bundle and save it as .yaml. Default is .json')
     .option('--no-open', 'Do not open the view page in the default browser')
     .action(function(swaggerFile, targetDir) {
         swaggerFileValue = swaggerFile;
@@ -82,6 +83,7 @@ if (program.bundle === null) {
     require("../index.js").build(
         swaggerFileValue,
         targetDirValue,
-        program.bundle
+        program.bundle,
+        program.bundleYaml
     );
 }
